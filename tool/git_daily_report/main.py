@@ -11,7 +11,7 @@ try:
         print("完成日志检查---------\n准备执行diff查询区别")
         print(git_reader.git_diff(file_path))
         print("完成diff查询---------\n准备创建markdown文件并写入日志")
-        reports_dir = file_path/Path("learning_system/reports")
+        reports_dir = file_path/Path("reports")
         reports_dir.mkdir(exist_ok=True)
         Path(reports_dir/f"{datetime.now().strftime("%Y-%m-%d")}.md").write_text(git_reader.generate_report(file_path))
         print(f"已添加{reports_dir/f"{datetime.now().strftime("%Y-%m-%d")}.md"}格式的git日志记录")
