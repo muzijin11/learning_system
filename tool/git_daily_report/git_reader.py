@@ -70,7 +70,7 @@ def deepseekapi(stat:str):
     response = client.chat.completions.create(
         model="deepseek-v4-pro",
         messages=[
-            {"role": "system", "content": "你负责分析我提供给你的git记录"},
+            {"role": "system", "content": "你负责分析我提供给你的git记录。如果用户提供的内容为空或没有任何git记录，你必须直接回复--今日无提交记录--，不要编造任何内容。"},
             {"role": "user", "content": f"以下是今日git记录\n{stat}\n帮我简单分析变更信息"},
         ],
         stream=False,
