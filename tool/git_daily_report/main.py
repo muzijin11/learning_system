@@ -4,7 +4,24 @@ from dotenv import load_dotenv
 
 import git_reader
 import os
+import logging
 load_dotenv()
+
+def logging_init():
+    repo_path = os.getenv("repo_path")
+    if not repo_path:
+        raise ValueError("请检查.env文件，repo_path没有内容")
+    else:
+        logpath = git_reader.check_path(repo_path)/"log"
+        logpath.mkdir(exist_ok=True)
+        logging.basicConfig(
+            level=logging.DEBUG,
+            filename=logpath/"app.log",
+            filemode="a",
+            encoding="utf-8",
+            format="%(asctime)s [%(levelname)s] %(filename)s:%(lineno)d - %(message)s"
+    )
+
 
 
 
@@ -16,7 +33,6 @@ if __name__ == "__main__":
             print("路径为空请检查.env文件")
         else:
             file_path = git_reader.check_path(file_path)
-            
             datetime_now = datetime.now().strftime("%Y-%m-%d")
             if git_reader.check_git(file_path):
                 print("此路径是git仓库\n即将执行检查日志操作------")
@@ -49,3 +65,6 @@ if __name__ == "__main__":
         print("这个路径不是一个文件夹！")
 
 
+def main():
+    logging_init()
+    logging.info("程序启动")
