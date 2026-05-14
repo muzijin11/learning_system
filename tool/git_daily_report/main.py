@@ -26,7 +26,7 @@ def check_get_path(repo_path : str)->Path:
     else:
         return git_reader.check_path(repo_path)
     
-        
+#获取git日志和diff并保存为markdown
 def git_if(path:Path,time):
     if git_reader.check_git(path):
         logging.info("此路径是git仓库---准备进行日志检查，diff差别并保存文件")
@@ -43,6 +43,7 @@ def git_if(path:Path,time):
         logging.warning("此路径不是git仓库")
         return
 
+#调用deepseekapi进行日志分析
 def log_analyse(path:Path,time):
     logging.info("---开始调用deepseek整理日志变化信息！请等待......---")
     stat = git_reader.git_stat(path)
@@ -56,6 +57,8 @@ def log_analyse(path:Path,time):
     logging.info("完成日志整理并存入%s",reports_dir/f"{time}deepseek分析.txt")
     return
 
+
+#主程序
 def main():
     logging_init()
     logging.info("程序启动")
