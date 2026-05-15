@@ -3,6 +3,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 import git_reader
+import db
 import os
 import logging
 load_dotenv()
@@ -11,7 +12,7 @@ def logging_init():
         logpath = Path("log")
         logpath.mkdir(exist_ok=True)
         logging.basicConfig(
-            level=logging.INFO,
+            level=logging.DEBUG,
             format="%(asctime)s [%(levelname)s] %(filename)s:%(lineno)d - %(message)s",
             handlers=[
         logging.FileHandler(logpath / "app.log", encoding="utf-8"),
@@ -25,7 +26,8 @@ def check_get_path(repo_path : str)->Path:
         raise ValueError("请检查.env文件，repo_path没有内容,或无次环境变量")
     else:
         return git_reader.check_path(repo_path)
-    
+
+
 #获取git日志和diff并保存为markdown
 def git_if(path:Path,time):
     if git_reader.check_git(path):
@@ -36,8 +38,15 @@ def git_if(path:Path,time):
         reports_dir.mkdir(exist_ok=True)
         logging.debug("创建report_path变量，此变量为markdown文件路径")
         report_path = reports_dir / f"{time}.md"
-        report_path.write_text(git_reader.generate_report(path),encoding="utf-8")
+        reports = git_reader.generate_report(path)
+        report_path.write_text(reports,encoding="utf-8")
         logging.info("完成日志查询和diff差别并存入文件%s.md",time)
+        log = git_reader.git_log(path)
+        commit_count = len(log.splitlines()) if log.strip() else 0
+        #数据库插入reports
+        logging.info("进行数据库插入")
+        row_id = db.insert_reports(report_date=time,commit_count=commit_count,report_content=reports)
+        logging.info("数据库插入成功，id: %s", row_id)
         return
     else:
         logging.warning("此路径不是git仓库")

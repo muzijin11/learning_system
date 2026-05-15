@@ -78,8 +78,7 @@ def deepseekapi(stat:str):
         extra_body={"thinking": {"type": "enabled"}}
     )
     return response.choices[0].message.content
-
-
-
     
-    
+
+
+
