@@ -29,7 +29,7 @@ def insert_reports(report_date:str,commit_count:int=0,report_content:str=None,ai
         logging.error(f"insert失败:{e}")
         return None
 
-def update_report(id:int,value:str):
+def update_report_ai_analysis(id:int,value:str):
     try:
         with connect_db() as conn:
             with conn.cursor() as cursor:

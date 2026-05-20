@@ -64,7 +64,7 @@ def log_analyse(path:Path,time,db_id:int):
     deepseek_report = git_reader.analyze_with_deepseek(stat)
     Path(reports_dir/f"{time}deepseek分析.txt").write_text(deepseek_report,encoding="utf-8")
     logging.info("准备将分析存入数据库")
-    db.update_report(id=db_id,value=deepseek_report)
+    db.update_report_ai_analysis(id=db_id,value=deepseek_report)
     logging.info("数据库存储完成")
     logging.info("完成日志整理并存入%s",reports_dir/f"{time}deepseek分析.txt")
     return

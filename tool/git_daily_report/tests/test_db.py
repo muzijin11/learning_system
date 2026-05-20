@@ -58,12 +58,6 @@ class TestInsertReports:
         assert result is None  # 现在函数捕获了异常，返回 None
 
 
-    @patch("db.connect_db")
-    def test_insert_db_connection_fails(self,mock_connect):
-        mock_connect.side_effect = Exception("MySQL connection refused")
-        result = db.insert_reports("2025-05-19")
-        assert result is None
-
 class TestSelectAllReports:
 
     @patch("db.connect_db")
@@ -92,6 +86,12 @@ class TestSelectAllReports:
         result = db.select_all_reports()
 
         assert result == []
+
+    @patch("db.connect_db")
+    def test_select_reports_db_fails(self, mock_connect):
+        mock_connect.side_effect = Exception("连接失败")
+        result = db.select_all_reports()
+        assert result is None
 
 
 class TestSelectReport:
@@ -123,6 +123,13 @@ class TestSelectReport:
 
         assert result is None
 
+
+    @patch("db.connect_db")
+    def test_select_report_db_fails(self, mock_connect):
+        mock_connect.side_effect = Exception("连接失败")
+        result = db.select_report("2025-05-20")
+        assert result is None
+
 class TestSelectLatest:
 
     @patch("db.connect_db")
@@ -151,6 +158,12 @@ class TestSelectLatest:
 
         assert result is None
 
+    @patch("db.connect_db")
+    def test_select_latest_db_fails(self, mock_connect):
+        mock_connect.side_effect = Exception("连接失败")
+        result = db.select_latest()
+        assert result is None
+
 
 class TestUpdateReport:
 
@@ -159,9 +172,16 @@ class TestUpdateReport:
         mock_cursor = MagicMock()
         mock_connect.return_value = make_mock_conn(mock_cursor)
 
-        db.update_report(id=1, value="新的AI分析内容")
+        db.update_report_ai_analysis(id=1, value="新的AI分析内容")
 
         mock_cursor.execute.assert_called_once()
         args = mock_cursor.execute.call_args[0]
         assert "新的AI分析内容" in args[1]
         assert 1 in args[1]
+
+
+    @patch("db.connect_db")
+    def test_update_db_fails(self, mock_connect):
+        mock_connect.side_effect = Exception("连接失败")
+        result = db.update_report_ai_analysis(id=-1,value="ai分析内容")
+        assert result is None
