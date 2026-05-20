@@ -6,12 +6,14 @@
 ## 技术栈
 python mysql fastapi
 ## 项目结构
+```
 tool/git_daily_report/
 ├── main.py        # 主程序，生成日报并存入数据库
 ├── api.py         # FastAPI 接口服务
 ├── db.py          # 数据库操作封装
 ├── git_reader.py  # Git 日志读取与 AI 分析
 └── README.md
+```
 ## 环境准备
 - Python 版本：3.12.3
 - 依赖安装命令 :pip install "fastapi[standard]" mysql-connector-python openai python-dotenv
